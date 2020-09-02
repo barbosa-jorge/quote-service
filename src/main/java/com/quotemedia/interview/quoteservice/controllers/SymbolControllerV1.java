@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
-public class QuoteController {
+@RequestMapping("/api/v1/symbols")
+public class SymbolControllerV1 {
 
     @Autowired
     private QuoteService quoteService;
 
-    @GetMapping("/symbols/{symbol}/quotes/latest")
+    @GetMapping("/{symbol}/quotes/latest")
     public ResponseEntity<QuoteResponse> getLatestQuoteBySymbol(@PathVariable("symbol") String symbol) {
         return new ResponseEntity(this.quoteService.findLatestQuoteBySymbol(symbol), HttpStatus.OK);
     }
