@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +27,10 @@ public class SymbolControllerV1Test {
     private static final String BID_VALUE = "0.67";
     private static final String ASK_VALUE = "0.81";
     private static final String SYMBOL_GOOG = "GOOG";
+    private static final String VALID_SYMBOL_NO_QUOTES = "GOOD";
+    private static final String INVALID_SYMBOL_LENGTH_3 = "ABC";
+    private static final String INVALID_SYMBOL_LENGTH_7 = "ABCDEFG";
+    private static final String INVALID_SYMBOL_EMPTY_SPACE = " ";
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,9 +58,8 @@ public class SymbolControllerV1Test {
     public void givenInvalidEmptySymbol_thenReturnBadRequestResponse() throws Exception {
 
         given(quoteService.findLatestQuoteBySymbol(anyString())).willThrow(BadRequestException.class);
-        String invalidSymbol = " ";
 
-        mockMvc.perform(get(URI_API_SYMBOLS, invalidSymbol))
+        mockMvc.perform(get(URI_API_SYMBOLS, INVALID_SYMBOL_EMPTY_SPACE))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
@@ -67,9 +69,8 @@ public class SymbolControllerV1Test {
     public void givenInvalidSymbolWith3Chars_thenReturnBadRequestResponse() throws Exception {
 
         given(quoteService.findLatestQuoteBySymbol(anyString())).willThrow(BadRequestException.class);
-        String invalidSymbol = "ABC";
 
-        mockMvc.perform(get(URI_API_SYMBOLS, invalidSymbol))
+        mockMvc.perform(get(URI_API_SYMBOLS, INVALID_SYMBOL_LENGTH_3))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
@@ -79,9 +80,8 @@ public class SymbolControllerV1Test {
     public void givenInvalidSymbolWithMoreThan6Chars_thenReturnBadRequestResponse() throws Exception {
 
         given(quoteService.findLatestQuoteBySymbol(anyString())).willThrow(BadRequestException.class);
-        String invalidSymbol = "ABCDEFGH";
 
-        mockMvc.perform(get(URI_API_SYMBOLS, invalidSymbol))
+        mockMvc.perform(get(URI_API_SYMBOLS, INVALID_SYMBOL_LENGTH_7))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
@@ -91,9 +91,8 @@ public class SymbolControllerV1Test {
     public void givenValidSymbolWithNoQuotes_thenReturnQuoteNotFoundResponse() throws Exception {
 
         given(quoteService.findLatestQuoteBySymbol(anyString())).willThrow(QuoteNotFoundException.class);
-        String validSymbol = "GOO1";
 
-        mockMvc.perform(get(URI_API_SYMBOLS, validSymbol))
+        mockMvc.perform(get(URI_API_SYMBOLS, VALID_SYMBOL_NO_QUOTES))
                 .andExpect(status().isNotFound())
                 .andReturn();
 

@@ -27,6 +27,9 @@ public class QuoteServiceTest {
     private static final String SYMBOL_GOOG = "GOOG";
     private static final BigDecimal BID_VALUE = new BigDecimal("1.2");
     private static final BigDecimal ASK_VALUE = new BigDecimal("2.5");
+    private static final String SYMBOL_LENGTH_ERROR_MESSAGE = "The symbol must be at least 4 characters and at most 6";
+    private static final String INVALID_SYMBOL_LENGTH_3 = "ABC";
+    private static final String INVALID_SYMBOL_LENGTH_7 = "ABCDEFG";
 
     @InjectMocks
     private QuoteServiceImpl quoteService;
@@ -78,7 +81,7 @@ public class QuoteServiceTest {
 
         // GIVEN
         given(messageSource.getMessage(anyString(), any(), any()))
-                .willReturn("The symbol must be at least 4 characters and at most 6");
+                .willReturn(SYMBOL_LENGTH_ERROR_MESSAGE);
 
         //WHEN
         this.quoteService.findLatestQuoteBySymbol(SYMBOL_NULL);
@@ -92,7 +95,7 @@ public class QuoteServiceTest {
 
         // GIVEN
         given(messageSource.getMessage(anyString(), any(), any()))
-                .willReturn("The symbol must be at least 4 characters and at most 6");
+                .willReturn(SYMBOL_LENGTH_ERROR_MESSAGE);
 
         //WHEN
         this.quoteService.findLatestQuoteBySymbol(SYMBOL_EMPTY);
@@ -105,13 +108,11 @@ public class QuoteServiceTest {
     public void givenInvalidSymbolWith3Chars_thenReturnBadRequestException() {
 
         // GIVEN
-        String invalidSymbol = "ABC";
-
         given(messageSource.getMessage(anyString(), any(), any()))
-                .willReturn("The symbol must be at least 4 characters and at most 6");
+                .willReturn(SYMBOL_LENGTH_ERROR_MESSAGE);
 
         //WHEN
-        this.quoteService.findLatestQuoteBySymbol(invalidSymbol);
+        this.quoteService.findLatestQuoteBySymbol(INVALID_SYMBOL_LENGTH_3);
 
         //THEN
         then(quoteRepository).should(never()).findFirstBySymbolOrderByDayDesc(anyString());
@@ -121,13 +122,11 @@ public class QuoteServiceTest {
     public void givenInvalidSymbolWithMoreThan6Chars_thenReturnBadRequestException() {
 
         // GIVEN
-        String invalidSymbol = "ABCDEFG";
-
         given(messageSource.getMessage(anyString(), any(), any()))
-                .willReturn("The symbol must be at least 4 characters and at most 6");
+                .willReturn(SYMBOL_LENGTH_ERROR_MESSAGE);
 
         //WHEN
-        this.quoteService.findLatestQuoteBySymbol(invalidSymbol);
+        this.quoteService.findLatestQuoteBySymbol(INVALID_SYMBOL_LENGTH_7);
 
         //THEN
         then(quoteRepository).should(never()).findFirstBySymbolOrderByDayDesc(anyString());
