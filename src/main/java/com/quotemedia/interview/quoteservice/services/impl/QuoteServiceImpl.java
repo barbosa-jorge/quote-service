@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class QuoteServiceImpl implements QuoteService {
@@ -47,7 +48,9 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     private boolean isSymbolOutOfRange(String symbol) {
-        return symbol.length() < SYMBOL_MIN_LENGTH || symbol.length() > SYMBOL_MAX_LENGTH;
+        return StringUtils.isEmpty(symbol)
+                || symbol.trim().length() < SYMBOL_MIN_LENGTH
+                  || symbol.trim().length() > SYMBOL_MAX_LENGTH;
     }
 
 }

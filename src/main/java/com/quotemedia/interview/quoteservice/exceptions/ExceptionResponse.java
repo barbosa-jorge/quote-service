@@ -13,8 +13,10 @@ import java.util.List;
 public class ExceptionResponse {
 
     private Date timestamp;
-    private String  message;
-    private String  details;
+    private String message;
+    private String details;
+    private int httpErrorCode;
+
     List<BeanValidationError> errors;
 
 }

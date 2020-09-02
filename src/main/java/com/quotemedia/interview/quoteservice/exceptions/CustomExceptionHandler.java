@@ -22,7 +22,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false), null);
+                request.getDescription(false), HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -31,7 +31,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleNotFoundExceptions(QuoteNotFoundException ex, WebRequest request) {
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false), null);
+                request.getDescription(false), HttpStatus.NOT_FOUND.value(), null);
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
@@ -40,7 +40,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleBadRequestExceptions(BadRequestException ex, WebRequest request) {
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false), null);
+                request.getDescription(false), HttpStatus.BAD_REQUEST.value(), null);
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
@@ -56,7 +56,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Validation Failed.",
-                null, errors);
+                null, HttpStatus.BAD_REQUEST.value(), errors);
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 
