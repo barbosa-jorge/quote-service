@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -30,4 +31,17 @@ public class Quote {
     @Column(name = "ASK")
     private BigDecimal ask;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quote quote = (Quote) o;
+        return Objects.equals(symbol, quote.symbol) &&
+                Objects.equals(day, quote.day);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(symbol, day);
+    }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -12,23 +13,31 @@ public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "user_id", nullable = false, length = 36)
+    @Column(name = "USER_ID", nullable = false, length = 36)
     private String userId;
 
-    @Column(name = "user_name", nullable = false, length = 100)
+    @Column(name = "USER_NAME", nullable = false, length = 100)
     private String username;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(name = "EMAIL", nullable = false, length = 100, unique = true)
     private String email;
 
     @Column(nullable = false, length = 100)
     private String encryptedPassword;
 
-//    @ManyToMany(cascade= { CascadeType.PERSIST }, fetch = FetchType.EAGER )
-//    @JoinTable(name="users_roles",
-//            joinColumns=@JoinColumn(name="users_id",referencedColumnName="id"),
-//            inverseJoinColumns=@JoinColumn(name="roles_id",referencedColumnName="id"))
-//    private Collection<RoleEntity> roles;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return email.equals(that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
 }

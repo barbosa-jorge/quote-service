@@ -18,6 +18,9 @@ import java.util.Optional;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
+    private static final String EMPTY_STRING = "";
+    private static final String NO_CREDENTIALS = null;
+
     private UserRepository userRepository;
 
     public AuthorizationFilter(AuthenticationManager authManager, UserRepository userRepository) {
@@ -50,7 +53,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             return null;
         }
 
-        token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
+        token = token.replace(SecurityConstants.TOKEN_PREFIX, EMPTY_STRING);
 
         String user = Jwts.parser()
                 .setSigningKey(SecurityConstants.getTokenSecret())
@@ -69,7 +72,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         UserPrincipal userPrincipal = new UserPrincipal(userEntity.get());
-        return new UsernamePasswordAuthenticationToken(userPrincipal, null,
+        return new UsernamePasswordAuthenticationToken(userPrincipal, NO_CREDENTIALS,
                 userPrincipal.getAuthorities());
 
     }

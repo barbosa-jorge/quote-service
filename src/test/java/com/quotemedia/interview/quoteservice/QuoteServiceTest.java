@@ -4,7 +4,7 @@ import com.quotemedia.interview.quoteservice.entities.Quote;
 import com.quotemedia.interview.quoteservice.exceptions.BadRequestException;
 import com.quotemedia.interview.quoteservice.exceptions.QuoteNotFoundException;
 import com.quotemedia.interview.quoteservice.repositories.QuoteRepository;
-import com.quotemedia.interview.quoteservice.responses.QuoteResponse;
+import com.quotemedia.interview.quoteservice.dtos.QuoteResponseDTO;
 import com.quotemedia.interview.quoteservice.services.impl.QuoteServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,17 +50,17 @@ public class QuoteServiceTest {
 
         // GIVEN
         Quote mockedQuote = getMockedQuote();
-        QuoteResponse mockedQuoteResponse = getMockedQuoteResponse();
+        QuoteResponseDTO mockedQuoteResponseDTO = getMockedQuoteResponse();
         given(quoteRepository.findFirstBySymbolOrderByDayDesc(anyString()))
                 .willReturn(Optional.ofNullable(mockedQuote));
 
         //WHEN
-        QuoteResponse quoteResponse = this.quoteService.findLatestQuoteBySymbol(SYMBOL_GOOG);
+        QuoteResponseDTO quoteResponseDTO = this.quoteService.findLatestQuoteBySymbol(SYMBOL_GOOG);
 
         //THEN
         then(quoteRepository).should().findFirstBySymbolOrderByDayDesc(anyString());
-        assertEquals(mockedQuoteResponse.getAsk(), quoteResponse.getAsk());
-        assertEquals(mockedQuoteResponse.getBid(), quoteResponse.getBid());
+        assertEquals(mockedQuoteResponseDTO.getAsk(), quoteResponseDTO.getAsk());
+        assertEquals(mockedQuoteResponseDTO.getBid(), quoteResponseDTO.getBid());
     }
 
     @Test(expected = QuoteNotFoundException.class)
@@ -70,7 +70,7 @@ public class QuoteServiceTest {
         given(quoteRepository.findFirstBySymbolOrderByDayDesc(anyString())).willThrow(QuoteNotFoundException.class);
 
         //WHEN
-        QuoteResponse quoteResponse = this.quoteService.findLatestQuoteBySymbol(SYMBOL_GOOG);
+        QuoteResponseDTO quoteResponseDTO = this.quoteService.findLatestQuoteBySymbol(SYMBOL_GOOG);
 
         //THEN
         then(quoteRepository).should().findFirstBySymbolOrderByDayDesc(anyString());
@@ -136,7 +136,7 @@ public class QuoteServiceTest {
         return new Quote(SYMBOL_GOOG, LocalDate.now(), BID_VALUE, ASK_VALUE);
     }
 
-    private QuoteResponse getMockedQuoteResponse() {
-        return new QuoteResponse(BID_VALUE, ASK_VALUE);
+    private QuoteResponseDTO getMockedQuoteResponse() {
+        return new QuoteResponseDTO(BID_VALUE, ASK_VALUE);
     }
 }

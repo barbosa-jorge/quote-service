@@ -1,6 +1,6 @@
 package com.quotemedia.interview.quoteservice.controllers;
 
-import com.quotemedia.interview.quoteservice.responses.QuoteResponse;
+import com.quotemedia.interview.quoteservice.dtos.QuoteResponseDTO;
 import com.quotemedia.interview.quoteservice.services.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class SymbolControllerV1 {
     private QuoteService quoteService;
 
     @GetMapping("/{symbol}/quotes/latest")
-    public ResponseEntity<QuoteResponse> getLatestQuoteBySymbol(@PathVariable("symbol") String symbol) {
+    public ResponseEntity<QuoteResponseDTO> getLatestQuoteBySymbol(@PathVariable("symbol") String symbol) {
         return new ResponseEntity(this.quoteService.findLatestQuoteBySymbol(symbol), HttpStatus.OK);
     }
 }

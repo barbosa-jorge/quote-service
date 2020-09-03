@@ -1,4 +1,4 @@
-package com.quotemedia.interview.quoteservice.responses;
+package com.quotemedia.interview.quoteservice.dtos;
 
 import lombok.Data;
 

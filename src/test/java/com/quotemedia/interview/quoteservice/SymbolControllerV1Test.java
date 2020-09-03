@@ -3,7 +3,7 @@ package com.quotemedia.interview.quoteservice;
 import com.quotemedia.interview.quoteservice.controllers.SymbolControllerV1;
 import com.quotemedia.interview.quoteservice.exceptions.BadRequestException;
 import com.quotemedia.interview.quoteservice.exceptions.QuoteNotFoundException;
-import com.quotemedia.interview.quoteservice.responses.QuoteResponse;
+import com.quotemedia.interview.quoteservice.dtos.QuoteResponseDTO;
 import com.quotemedia.interview.quoteservice.services.QuoteService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +44,8 @@ public class SymbolControllerV1Test {
     @Test
     public void givenValidSymbolWithQuotes_thenReturnLatestQuoteSuccessfully() throws Exception {
 
-        QuoteResponse quoteResponse = createQuoteResponse(BID_VALUE, ASK_VALUE);
-        given(quoteService.findLatestQuoteBySymbol(anyString())).willReturn(quoteResponse);
+        QuoteResponseDTO quoteResponseDTO = createQuoteResponse(BID_VALUE, ASK_VALUE);
+        given(quoteService.findLatestQuoteBySymbol(anyString())).willReturn(quoteResponseDTO);
 
         mockMvc.perform(get(URI_API_SYMBOLS, SYMBOL_GOOG))
                 .andExpect(status().isOk())
@@ -98,8 +98,8 @@ public class SymbolControllerV1Test {
 
     }
 
-    private QuoteResponse createQuoteResponse(String bid, String ask) {
-        return new QuoteResponse(new BigDecimal(bid), new BigDecimal(ask));
+    private QuoteResponseDTO createQuoteResponse(String bid, String ask) {
+        return new QuoteResponseDTO(new BigDecimal(bid), new BigDecimal(ask));
     }
 
     private String getMockedQuoteResponse() {

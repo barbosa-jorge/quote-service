@@ -1,10 +1,10 @@
 package com.quotemedia.interview.quoteservice.services.impl;
 
+import com.quotemedia.interview.quoteservice.dtos.QuoteResponseDTO;
 import com.quotemedia.interview.quoteservice.entities.Quote;
 import com.quotemedia.interview.quoteservice.exceptions.BadRequestException;
 import com.quotemedia.interview.quoteservice.exceptions.QuoteNotFoundException;
 import com.quotemedia.interview.quoteservice.repositories.QuoteRepository;
-import com.quotemedia.interview.quoteservice.responses.QuoteResponse;
 import com.quotemedia.interview.quoteservice.services.QuoteService;
 import com.quotemedia.interview.quoteservice.shared.constants.AppQuoteConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class QuoteServiceImpl implements QuoteService {
     @Autowired
     private QuoteRepository quoteRepository;
 
-    public QuoteResponse findLatestQuoteBySymbol(String symbol) {
+    public QuoteResponseDTO findLatestQuoteBySymbol(String symbol) {
 
         validateSymbol(symbol);
 
@@ -34,7 +34,7 @@ public class QuoteServiceImpl implements QuoteService {
                         .getMessage(AppQuoteConstants.ERROR_QUOTE_NOT_FOUND, AppQuoteConstants.NO_PARAMS,
                                 LocaleContextHolder.getLocale())));
 
-        return new QuoteResponse(quote.getBid(), quote.getAsk());
+        return new QuoteResponseDTO(quote.getBid(), quote.getAsk());
 
     }
 
@@ -42,7 +42,8 @@ public class QuoteServiceImpl implements QuoteService {
         if (isSymbolOutOfRange(symbol)) {
             throw new BadRequestException(messageSource
                     .getMessage(AppQuoteConstants.ERROR_QUOTE_SYMBOL_LENGTH,
-                            new Object[]{SYMBOL_MIN_LENGTH, SYMBOL_MAX_LENGTH}, LocaleContextHolder.getLocale()));
+                            new Object[]{SYMBOL_MIN_LENGTH, SYMBOL_MAX_LENGTH},
+                                LocaleContextHolder.getLocale()));
 
         }
     }

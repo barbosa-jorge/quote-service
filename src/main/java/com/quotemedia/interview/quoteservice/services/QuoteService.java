@@ -1,7 +1,7 @@
 package com.quotemedia.interview.quoteservice.services;
 
-import com.quotemedia.interview.quoteservice.responses.QuoteResponse;
+import com.quotemedia.interview.quoteservice.dtos.QuoteResponseDTO;
 
 public interface QuoteService {
-    QuoteResponse findLatestQuoteBySymbol(String symbol);
+    QuoteResponseDTO findLatestQuoteBySymbol(String symbol);
 }

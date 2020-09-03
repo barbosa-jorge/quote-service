@@ -2,8 +2,8 @@ package com.quotemedia.interview.quoteservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quotemedia.interview.quoteservice.SpringApplicationContext;
-import com.quotemedia.interview.quoteservice.responses.UserLoginRequestDTO;
-import com.quotemedia.interview.quoteservice.responses.UserResponseDTO;
+import com.quotemedia.interview.quoteservice.dtos.UserLoginRequestDTO;
+import com.quotemedia.interview.quoteservice.dtos.UserResponseDTO;
 import com.quotemedia.interview.quoteservice.services.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +23,10 @@ import java.util.Date;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
+    private static final String ACCEPT = "Accept";
+    private static final String USER_ID = "UserId";
+    private static final String USER_SERVICE_IMPL = "userServiceImpl";
+
     private String contentType;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -34,7 +38,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
 
-            contentType = req.getHeader("Accept");
+            contentType = req.getHeader(ACCEPT);
 
             UserLoginRequestDTO creds = new ObjectMapper()
                     .readValue(req.getInputStream(), UserLoginRequestDTO.class);
@@ -62,12 +66,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret() )
                 .compact();
-        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserService userService = (UserService) SpringApplicationContext.getBean(USER_SERVICE_IMPL);
         UserResponseDTO userDto = userService.getUserByEmail(userName);
 
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        res.addHeader("UserID", userDto.getUserId());
+        res.addHeader(USER_ID, userDto.getUserId());
 
     }
-
 }

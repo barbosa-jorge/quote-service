@@ -3,7 +3,7 @@ package com.quotemedia.interview.quoteservice;
 import com.quotemedia.interview.quoteservice.entities.Quote;
 import com.quotemedia.interview.quoteservice.exceptions.ExceptionResponse;
 import com.quotemedia.interview.quoteservice.repositories.QuoteRepository;
-import com.quotemedia.interview.quoteservice.responses.QuoteResponse;
+import com.quotemedia.interview.quoteservice.dtos.QuoteResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,7 +54,7 @@ public class SymbolControllerV1IT {
         params.put(PATH_VARIABLE_SYMBOL, SYMBOL_GOOG);
 
         // WHEN
-        QuoteResponse response = restTemplate.getForObject(URI_API, QuoteResponse.class, params);
+        QuoteResponseDTO response = restTemplate.getForObject(URI_API, QuoteResponseDTO.class, params);
 
         //THEN
         assertEquals(getMockedQuoteResponse(), response);
@@ -121,8 +121,8 @@ public class SymbolControllerV1IT {
 
     }
 
-    private QuoteResponse getMockedQuoteResponse() {
-        return new QuoteResponse(BID_VALUE, ASK_VALUE);
+    private QuoteResponseDTO getMockedQuoteResponse() {
+        return new QuoteResponseDTO(BID_VALUE, ASK_VALUE);
     }
 
     private Optional<Quote> getMockedQuote() {

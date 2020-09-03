@@ -2,7 +2,6 @@ package com.quotemedia.interview.quoteservice.security;
 
 import com.quotemedia.interview.quoteservice.repositories.UserRepository;
 import com.quotemedia.interview.quoteservice.services.UserService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -11,11 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
@@ -37,7 +31,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
         http
         .cors().and()
         .csrf().disable().authorizeRequests()
-        .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+        .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URI)
         .permitAll()
         .antMatchers(SecurityConstants.H2_CONSOLE)
         .permitAll()
@@ -59,22 +53,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 
     protected AuthenticationFilter getAuthenticationFilter() throws Exception {
         final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
-        filter.setFilterProcessesUrl("/users/login");
+        filter.setFilterProcessesUrl(SecurityConstants.USERS_LOGIN_URI);
         return filter;
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","OPTIONS"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
     }
 }
