@@ -11,10 +11,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HighestSymbolAskResponseDTO {
+
     private String symbol;
     private BigDecimal ask;
 
-    public static HighestSymbolAskResponseDTO mapQuoteToResponseDTO(Quote quote) {
+    public static HighestSymbolAskResponseDTO mapEntityToResponseDTO(Quote quote) {
         return new HighestSymbolAskResponseDTO(quote.getSymbol(), quote.getAsk());
     }
 

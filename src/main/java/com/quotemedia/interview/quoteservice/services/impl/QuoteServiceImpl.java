@@ -58,7 +58,7 @@ public class QuoteServiceImpl implements QuoteService {
         LocalDate parsedDay = convertStringToLocalDate(day);
 
         return quoteRepository.findFirstByDayOrderByAskDesc(parsedDay)
-                .map(HighestSymbolAskResponseDTO::mapQuoteToResponseDTO)
+                .map(HighestSymbolAskResponseDTO::mapEntityToResponseDTO)
                 .orElseThrow(() -> new QuoteNotFoundException(messageSource
                         .getMessage(AppQuoteConstants.ERROR_QUOTE_NOT_FOUND,
                                 AppQuoteConstants.NO_PARAMS, LocaleContextHolder.getLocale())));

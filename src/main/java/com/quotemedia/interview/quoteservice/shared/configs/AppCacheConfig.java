@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableCaching
-public class AppCacheConfig  extends CachingConfigurerSupport {
+public class AppCacheConfig extends CachingConfigurerSupport {
 
     private static final String EVICTION_POLICY_LRU = "LRU";
 
