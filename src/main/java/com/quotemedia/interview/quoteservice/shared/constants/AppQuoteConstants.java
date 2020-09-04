@@ -7,6 +7,7 @@ public class AppQuoteConstants {
     public static final String ERROR_QUOTE_NOT_FOUND = "error.application.quote.not.found";
     public static final String ERROR_QUOTE_SYMBOL_LENGTH = "error.application.quote.symbol.length";
     public static final String ERROR_USER_NOT_FOUND = "error.application.user.not.found";
+    public static final String ERROR_USER_ALREADY_EXISTS = "error.application.user.already.exists";
 
     // General Constants
     public static final Object[] NO_PARAMS = null;

@@ -30,8 +30,11 @@ public class QuoteServiceImpl implements QuoteService {
     @Autowired
     private QuoteRepository quoteRepository;
 
+    /*
+    * Caching will be evicted after 1 minute.
+    * */
     @Override
-    @Cacheable(value = "quotes-cache", key = "'QuotesInCache'+#symbol", condition = "true")
+    @Cacheable(value = "quotes-cache", key = "'QuotesInCache'+#symbol")
     public QuoteResponseDTO findLatestQuoteBySymbol(String symbol) {
 
         validateSymbol(symbol);
@@ -45,6 +48,9 @@ public class QuoteServiceImpl implements QuoteService {
 
     }
 
+    /*
+     * Caching will be evicted after 1 minute.
+     * */
     @Override
     @Cacheable(value = "highestSymbolAsk-cache", key = "'HighestSymbolAskInCache'+#day")
     public HighestSymbolAskResponseDTO getHighestSymbolAskByDay(String day) {

@@ -3,6 +3,7 @@ package com.quotemedia.interview.quoteservice.services.impl;
 import com.quotemedia.interview.quoteservice.dtos.UserRequestDTO;
 import com.quotemedia.interview.quoteservice.dtos.UserResponseDTO;
 import com.quotemedia.interview.quoteservice.entities.UserEntity;
+import com.quotemedia.interview.quoteservice.exceptions.BadRequestException;
 import com.quotemedia.interview.quoteservice.exceptions.UserNotFoundException;
 import com.quotemedia.interview.quoteservice.repositories.UserRepository;
 import com.quotemedia.interview.quoteservice.security.UserPrincipal;
@@ -39,6 +40,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO save(UserRequestDTO userRequestDTO) {
 
+        validateExistentUser(userRequestDTO.getEmail());
+
         UserEntity user = modelMapper.map(userRequestDTO, UserEntity.class);
         user.setUserId(utils.generateUserId());
 
@@ -72,5 +75,16 @@ public class UserServiceImpl implements UserService {
 
         return modelMapper.map(userEntity, UserResponseDTO.class);
 
+    }
+
+    private void validateExistentUser(String email) {
+
+        boolean isExistentUser = userRepository.existsByEmail(email);
+
+        if (isExistentUser) {
+            throw new BadRequestException(messageSource
+                    .getMessage(AppQuoteConstants.ERROR_USER_ALREADY_EXISTS, AppQuoteConstants.NO_PARAMS,
+                            LocaleContextHolder.getLocale()));
+        }
     }
 }
