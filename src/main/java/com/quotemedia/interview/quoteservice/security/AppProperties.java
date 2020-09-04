@@ -10,8 +10,15 @@ public class AppProperties {
     @Autowired
     private Environment env;
 
-    public String getTokenSecret()
-    {
+    public String getTokenSecret() {
         return env.getProperty("tokenSecret");
+    }
+
+    public int getMaxEntriesLocalHeap() {
+        return Integer.parseInt(env.getProperty("maxEntriesLocalHeap"));
+    }
+
+    public int getTimeToLiveSeconds() {
+        return Integer.parseInt(env.getProperty("timeToLiveSeconds"));
     }
 }

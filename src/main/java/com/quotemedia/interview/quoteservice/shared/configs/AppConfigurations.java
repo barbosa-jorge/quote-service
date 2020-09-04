@@ -27,7 +27,6 @@ public class AppConfigurations {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();

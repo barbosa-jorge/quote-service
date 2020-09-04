@@ -1,5 +1,6 @@
 package com.quotemedia.interview.quoteservice.services.impl;
 
+import com.quotemedia.interview.quoteservice.dtos.HighestSymbolAskResponseDTO;
 import com.quotemedia.interview.quoteservice.dtos.QuoteResponseDTO;
 import com.quotemedia.interview.quoteservice.entities.Quote;
 import com.quotemedia.interview.quoteservice.exceptions.BadRequestException;
@@ -8,10 +9,14 @@ import com.quotemedia.interview.quoteservice.repositories.QuoteRepository;
 import com.quotemedia.interview.quoteservice.services.QuoteService;
 import com.quotemedia.interview.quoteservice.shared.constants.AppQuoteConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.time.DateTimeException;
+import java.time.LocalDate;
 
 @Service
 public class QuoteServiceImpl implements QuoteService {
@@ -25,6 +30,8 @@ public class QuoteServiceImpl implements QuoteService {
     @Autowired
     private QuoteRepository quoteRepository;
 
+    @Override
+    @Cacheable(value = "quotes-cache", key = "'QuotesInCache'+#symbol", condition = "true")
     public QuoteResponseDTO findLatestQuoteBySymbol(String symbol) {
 
         validateSymbol(symbol);
@@ -37,6 +44,32 @@ public class QuoteServiceImpl implements QuoteService {
         return new QuoteResponseDTO(quote.getBid(), quote.getAsk());
 
     }
+
+    @Override
+    @Cacheable(value = "highestSymbolAsk-cache", key = "'HighestSymbolAskInCache'+#day")
+    public HighestSymbolAskResponseDTO getHighestSymbolAskByDay(String day) {
+
+        LocalDate parsedDay = convertStringToLocalDate(day);
+
+        return quoteRepository.findFirstByDayOrderByAskDesc(parsedDay)
+                .map(HighestSymbolAskResponseDTO::mapQuoteToResponseDTO)
+                .orElseThrow(() -> new QuoteNotFoundException(messageSource
+                        .getMessage(AppQuoteConstants.ERROR_QUOTE_NOT_FOUND,
+                                AppQuoteConstants.NO_PARAMS, LocaleContextHolder.getLocale())));
+
+    }
+
+    private LocalDate convertStringToLocalDate(String day) {
+        try {
+            LocalDate parseDay =  LocalDate.parse(day);
+            return parseDay;
+        } catch (DateTimeException e) {
+            throw new BadRequestException(messageSource
+                    .getMessage(AppQuoteConstants.ERROR_INVALID_DATE_FORMAT,
+                            AppQuoteConstants.NO_PARAMS, LocaleContextHolder.getLocale()));
+        }
+    }
+
 
     private void validateSymbol(String symbol) {
         if (isSymbolOutOfRange(symbol)) {
@@ -53,5 +86,4 @@ public class QuoteServiceImpl implements QuoteService {
                 || symbol.trim().length() < SYMBOL_MIN_LENGTH
                   || symbol.trim().length() > SYMBOL_MAX_LENGTH;
     }
-
 }

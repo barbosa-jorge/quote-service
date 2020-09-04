@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Utils utils;
 
+    @Override
     public UserResponseDTO save(UserRequestDTO userRequestDTO) {
 
         UserEntity user = modelMapper.map(userRequestDTO, UserEntity.class);
